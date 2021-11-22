@@ -22,6 +22,7 @@ function Main() {
   let history = useHistory();
 
   const handleClickLogout = () => {
+    window.localStorage.setItem("token", "");
     history.push("/");
   };
 

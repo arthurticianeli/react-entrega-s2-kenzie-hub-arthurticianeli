@@ -14,25 +14,45 @@ import Logo from "../../components/Logo";
 import BasicModal from "../../components/Modal";
 import Popover from "../../components/Popover";
 
-function Register() {
-  let history = useHistory();
+import api from "../../services";
 
-  const handleClick = () => {
-    history.push("/");
-  };
+function Register({ setId }) {
+  let history = useHistory();
 
   // modal
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  // quarter
-  const [quarter, setQuarter] = useState("primeiro");
-  const handleQuarter = (e) => {
-    setQuarter(e.target.value);
+  // cadastro
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [bio, setBio] = useState("");
+  const [contact, setContact] = useState("");
+  const [password, setPassword] = useState("");
+  const [course_module, setCourse_module] = useState("");
+
+  const newUser = {
+    name: name,
+    email: email,
+    bio: bio,
+    contact: contact,
+    password: password,
+    course_module: course_module,
   };
 
-  // submit
+  const handleClick = () => {
+    api.post("/users", newUser).then(
+      (response) => {
+        setId(response.data.id);
+        handleOpen();
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
   };
@@ -104,10 +124,30 @@ function Register() {
           paddingBottom: "30px",
         }}
       >
-        <TextField variant="outlined" id="outlined-basic" label="Nome" />
-        <TextField variant="outlined" id="outlined-basic" label="Email" />
-        <TextField variant="outlined" id="outlined-basic" label="Bio" />
-        <TextField variant="outlined" id="outlined-basic" label="Contato" />
+        <TextField
+          variant="outlined"
+          id="outlined-basic"
+          label="name"
+          onChange={(e) => setName(e.target.value)}
+        />
+        <TextField
+          variant="outlined"
+          id="outlined-basic"
+          label="Email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          variant="outlined"
+          id="outlined-basic"
+          label="Bio"
+          onChange={(e) => setBio(e.target.value)}
+        />
+        <TextField
+          variant="outlined"
+          id="outlined-basic"
+          label="contact"
+          onChange={(e) => setContact(e.target.value)}
+        />
         <Typography variant="body2">Selecionar módulo:</Typography>
 
         <ToggleButtonGroup
@@ -118,9 +158,9 @@ function Register() {
             textTransform: "none",
           }}
           color="primary"
-          value={quarter}
+          value={course_module}
           exclusive
-          onChange={handleQuarter}
+          onClick={(e) => setCourse_module(e.target.value)}
         >
           <ToggleButton
             value="primeiro"
@@ -199,13 +239,20 @@ function Register() {
           </ToggleButton>
         </ToggleButtonGroup>
 
-        <TextField variant="outlined" id="outlined-basic" label="Senha" />
         <TextField
           variant="outlined"
           id="outlined-basic"
-          label="Confirmar senha"
+          label="password"
+          onChange={(e) => setPassword(e.target.value)}
+          type="password"
         />
-        <Button variant="purple" onClick={handleOpen} type="submit">
+        <TextField
+          variant="outlined"
+          id="outlined-basic"
+          label="Confirmar password"
+          type="password"
+        />
+        <Button variant="purple" onClick={handleClick} type="submit">
           Cadastrar
         </Button>
       </Box>
@@ -240,7 +287,7 @@ function Register() {
           Agora basta fazer seu login e começar sua jornada...
         </Typography>
 
-        <Button variant="green" onClick={handleClick}>
+        <Button variant="green" onClick={() => history.push("/")}>
           Ir para login
         </Button>
       </BasicModal>

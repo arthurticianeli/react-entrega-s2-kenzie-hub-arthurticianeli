@@ -3,11 +3,11 @@ import { useHistory } from "react-router-dom";
 
 import Logo from "../../components/Logo";
 
-function Home() {
+function Home({ setEmail, setPassword, login }) {
   let history = useHistory();
 
   const handleClickLogin = () => {
-    history.push("/main");
+    login();
   };
   const handleClickRegister = () => {
     history.push("/register");
@@ -38,8 +38,19 @@ function Home() {
           paddingBottom: "30px",
         }}
       >
-        <TextField variant="outlined" id="outlined-basic" label="Login" />
-        <TextField variant="outlined" id="outlined-basic" label="Senha" />
+        <TextField
+          variant="outlined"
+          id="outlined-basic"
+          label="Login"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          variant="outlined"
+          id="outlined-basic"
+          label="Senha"
+          type="password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
         <Button variant="purple" onClick={handleClickLogin}>
           Logar
         </Button>
